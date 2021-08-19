@@ -10,7 +10,6 @@ export const getAllMsgs = asyncHandler(async (req,res) => {
     res.status(200).json({total,items});
 });
 
-
 export const getOneMsg = asyncHandler(async (req,res) => {
     const id = parseInt(req.params.id,10);
     if (!Number.isInteger(id))throw new ErrorResponse('Bad ID',400);
@@ -35,5 +34,16 @@ export const deleteMsg = asyncHandler(async (req,res) => {
     if (!Number.isInteger(id))throw new ErrorResponse('Bad ID',400);
     const query='DELETE FROM ONLY messages WHERE id=$1 RETURNING id, title, message, date, userid AS "userId";';
     const { rows } = await pool.query(query,[id]);
+    res.status(200).json(rows[0]);
+});
+
+export const updateMsg = asyncHandler(async (req,res) => {
+    const id = parseInt(req.params.id,10);
+    if (!Number.isInteger(id))throw new ErrorResponse('Bad ID',400);
+    const {error} = validateWithJoi(req.body,'newMsg');
+    if (error)throw new ErrorResponse(error.details[0].message,400);
+    const { title, date, userId, message } = req.body;
+    const query='UPDATE ONLY messages SET title=$2, date=$3, userid=$4, message=$5 WHERE id=$1 RETURNING id, title, message, date, userid AS "userId";';
+    const { rows } = await pool.query(query,[id, title, date, userId, message]);
     res.status(200).json(rows[0]);
 });
