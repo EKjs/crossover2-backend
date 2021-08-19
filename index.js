@@ -1,8 +1,8 @@
+import 'dotenv/config.js';
 import express from 'express';
 import cors from 'cors';
 import userRouter from './routes/userRouter.js';
 import msgRouter from './routes/msgRouter.js';
-import 'dotenv/config.js';
 import errorHandler from './middlewares/errorHandler.js';
 
 const app=express();

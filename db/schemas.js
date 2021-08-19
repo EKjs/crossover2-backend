@@ -16,6 +16,7 @@ const validateWithJoi = (reqData,reqType)=>{
             userName:Joi.string().min(1).required(),
             email:Joi.string().required().email(),
             password:Joi.string().min(8).required(),
+            avatar:Joi.string(),
         }
         break;
 
