@@ -12,16 +12,13 @@ export const getAllMsgs = asyncHandler(async (req,res) => {
 
 
 export const getOneMsg = asyncHandler(async (req,res) => {
-    
-    //const { id } = req.params;
-    res.status(200).json({
-        id:0,
-        title:'first',
-        message:'Vestibulum quis felis mi. Pellentesque gravida mauris sit amet urna interdum pretium. Etiam egestas dolor vestibulum libero porttitor, at convallis nunc pretium. Quisque sed gravida odio, id aliquam sem. Aenean quis tortor risus.',
-        date:new Date(Date.now()),
-        userId:123,
-        userName:'Pikachu'
-    })
+    const id = parseInt(req.params.id,10);
+    if (!Number.isInteger(id))throw new ErrorResponse('Bad ID',400);
+    const query = `SELECT m.id AS id, title, date, message, userid AS "userId", u.name AS "userName", u.avatar as avatar
+    FROM messages AS m JOIN users AS u ON m.userid=u.id WHERE m.id=$1;`;
+    const {rows} = await pool.query(query,[id]);
+    if (rows.length===0)throw new ErrorResponse('Id not found',404);
+    res.status(200).json(rows[0])
 });
 
 export const createMsg = asyncHandler(async (req,res) => {
