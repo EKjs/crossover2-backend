@@ -5,7 +5,7 @@ import ErrorResponse from '../utils/ErrorResponse.js';
 
 export const getAllMsgs = asyncHandler(async (req,res) => {
     const query = `SELECT m.id AS id, title, date, message, userid AS "userId", u.name AS "userName", u.avatar as avatar
-                    FROM messages AS m JOIN users AS u ON m.userid=u.id ORDER BY m.date;`;
+                    FROM messages AS m JOIN users AS u ON m.userid=u.id ORDER BY m.date DESC;`;
     const { rowCount: total, rows: items } = await pool.query(query);
     res.status(200).json({total,items});
 });
@@ -31,5 +31,9 @@ export const createMsg = asyncHandler(async (req,res) => {
 });
 
 export const deleteMsg = asyncHandler(async (req,res) => {
-    res.status(200).json({msg:'delete ok'})
+    const id = parseInt(req.params.id,10);
+    if (!Number.isInteger(id))throw new ErrorResponse('Bad ID',400);
+    const query='DELETE FROM ONLY messages WHERE id=$1 RETURNING id, title, message, date, userid AS "userId";';
+    const { rows } = await pool.query(query,[id]);
+    res.status(200).json(rows[0]);
 });
