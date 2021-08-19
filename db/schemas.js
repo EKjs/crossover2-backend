@@ -8,7 +8,7 @@ const validateWithJoi = (reqData,reqType)=>{
             title:Joi.string().min(1).required(),
             message:Joi.string().min(1).required(),
             userId:Joi.number().required(),
-            date:Joi.date().required()
+            date:Joi.date().required(),
         }
         break;
       case 'newUser':
