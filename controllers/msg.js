@@ -14,7 +14,7 @@ export const getAllMsgs = asyncHandler(async (req,res) => {
             id:0,
             title:'first',
             message:'Vestibulum quis felis mi. Pellentesque gravida mauris sit amet urna interdum pretium. Etiam egestas dolor vestibulum libero porttitor, at convallis nunc pretium. Quisque sed gravida odio, id aliquam sem. Aenean quis tortor risus.',
-            date:Date.now(),
+            date:new Date(Date.now()),
             userId:123,
             userName:'Pikachu'
         },
@@ -22,7 +22,7 @@ export const getAllMsgs = asyncHandler(async (req,res) => {
             id:1,
             title:'Second msg',
             message:'Curabitur eros neque, auctor nec eros sed, aliquet rhoncus orci. Ut tortor mauris, tincidunt eget arcu eu, dictum egestas quam. Suspendisse eu pellentesque mauris, ut suscipit velit. Pellentesque semper, nisl at elementum pharetra, dui dui porta nisl, ut suscipit ipsum erat ac odio. Curabitur neque massa, tincidunt ut faucibus sed, ultricies vel ligula. Integer velit massa, gravida a ex ac, fermentum sagittis mi. Fusce dignissim lorem eget massa efficitur, quis vehicula massa cursus. Mauris efficitur mauris et consectetur scelerisque. Vestibulum nec lorem non libero pellentesque scelerisque eget ac nunc. In hac habitasse platea dictumst. Aenean et purus id justo varius molestie. ',
-            date:Date.now(),
+            date:new Date(Date.now()),
             userId:123,
             userName:'Pikachu'
         }
