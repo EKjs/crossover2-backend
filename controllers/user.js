@@ -36,7 +36,8 @@ export const getUserAllMsgs = asyncHandler(async (req,res) => {
 export const getOneUser = asyncHandler(async (req,res) => {
     const id = parseInt(req.params.id,10);
     if (!Number.isInteger(id))throw new ErrorResponse('Bad ID',400)
-    const rows = await pool.query('SELECT id,name AS "userName",email FROM users WHERE id=$1;',[id]);
+    const {rows} = await pool.query('SELECT id, name AS "userName", email FROM users WHERE id=$1;',[id]);
+    if (rows.length===0)throw new ErrorResponse('Id not found',404);
     res.status(200).json(rows[0])
 });
 
@@ -44,11 +45,17 @@ export const createUser = asyncHandler(async (req,res) => {
     const {error} = validateWithJoi(req.body,'newUser');
     if (error)throw new ErrorResponse(error.details[0].message,400);
     const { userName, email, password, avatar } = req.body;
-    const query = 'INSERT INTO users (name,email,password,avatar) VALUES ($1,$2,$3,$4) RETURNING id,name AS userName,avatar;';
+    const {rows:checkIfExists} = await pool.query('SELECT * FROM users WHERE email=$1;',[email]);
+    if (checkIfExists.length>0)throw new ErrorResponse('Email is already taken',400);
+    const query = 'INSERT INTO users (name,email,password,avatar) VALUES ($1,$2,$3,$4) RETURNING id, name AS "userName",avatar;';
     const { rows } = await pool.query(query,[userName, email, password, avatar]);
     res.status(201).json(rows[0]);
 });
 
 export const deleteUser = asyncHandler(async (req,res) => {
-    res.status(200).json({msg:'delete ok'})
+    const id = parseInt(req.params.id,10);
+    if (!Number.isInteger(id))throw new ErrorResponse('Bad ID',400);
+    const query='DELETE FROM ONLY users WHERE id=$1 RETURNING id, name AS "userName";';
+    const { rows } = await pool.query(query,[id]);
+    res.status(200).json(rows[0]);
 });
