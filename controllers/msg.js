@@ -37,7 +37,7 @@ export const getOneMsg = asyncHandler(async (req,res) => {
         id:0,
         title:'first',
         message:'Vestibulum quis felis mi. Pellentesque gravida mauris sit amet urna interdum pretium. Etiam egestas dolor vestibulum libero porttitor, at convallis nunc pretium. Quisque sed gravida odio, id aliquam sem. Aenean quis tortor risus.',
-        date:date,
+        date:new Date(Date.now()),
         userId:123,
         userName:'Pikachu'
     })
