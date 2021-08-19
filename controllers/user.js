@@ -4,14 +4,14 @@ import validateWithJoi from '../db/schemas.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
 
 export const getAllUsers = asyncHandler(async (req,res) => {
-    const { rows: users } = await pool.query('SELECT id,name AS "userName",email,avatar FROM users;');
+    const { rows: users } = await pool.query('SELECT id,name AS "userName",email, avatar FROM users;');
     res.status(200).json(users)
 });
 
 export const getUserAllMsgs = asyncHandler(async (req,res) => {
     const id = parseInt(req.params.id,10);
     if (!Number.isInteger(id))throw new ErrorResponse('Bad ID',400)
-    const query = `SELECT m.id AS id, title, date, message, userid AS "userId", u.name AS "userName", u.avatar as avatar
+    const query = `SELECT m.id AS id, title, date, message, userid AS "userId", u.name AS "userName", u.avatar as avatar, email
     FROM messages AS m JOIN users AS u ON m.userid=u.id WHERE userid=$1 ORDER BY m.date DESC;`;
     const { rowCount: total, rows: items } = await pool.query(query,[id]);
     res.status(200).json({total,items});

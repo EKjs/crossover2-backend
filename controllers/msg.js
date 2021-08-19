@@ -4,7 +4,7 @@ import asyncHandler from '../middlewares/asyncHandler.js';
 import ErrorResponse from '../utils/ErrorResponse.js';
 
 export const getAllMsgs = asyncHandler(async (req,res) => {
-    const query = `SELECT m.id AS id, title, date, message, userid AS "userId", u.name AS "userName", u.avatar as avatar
+    const query = `SELECT m.id AS id, title, date, message, userid AS "userId", u.name AS "userName", u.avatar as avatar, email
                     FROM messages AS m JOIN users AS u ON m.userid=u.id ORDER BY m.date DESC;`;
     const { rowCount: total, rows: items } = await pool.query(query);
     res.status(200).json({total,items});
@@ -13,7 +13,7 @@ export const getAllMsgs = asyncHandler(async (req,res) => {
 export const getOneMsg = asyncHandler(async (req,res) => {
     const id = parseInt(req.params.id,10);
     if (!Number.isInteger(id))throw new ErrorResponse('Bad ID',400);
-    const query = `SELECT m.id AS id, title, date, message, userid AS "userId", u.name AS "userName", u.avatar as avatar
+    const query = `SELECT m.id AS id, title, date, message, userid AS "userId", u.name AS "userName", u.avatar as avatar, email
     FROM messages AS m JOIN users AS u ON m.userid=u.id WHERE m.id=$1;`;
     const {rows} = await pool.query(query,[id]);
     if (rows.length===0)throw new ErrorResponse('Id not found',404);
